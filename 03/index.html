@@ -447,7 +447,7 @@
   const urlAtual = new URL(window.location.href);
 
   setTimeout(() => {
-    const destino = new URL('../../oferta', urlAtual);
+    const destino = new URL('https://onlymore.lat/oferta/', urlAtual);
     destino.search = urlAtual.search; // mantém UTMs
 
     window.location.href = destino.toString();
@@ -525,6 +525,7 @@
     createParticles(45);
     drawParticles();
   </script>
+
 
 
 
