@@ -447,7 +447,7 @@
   const urlAtual = new URL(window.location.href);
 
   setTimeout(() => {
-    const destino = new URL('https://onlymore.lat/oferta/', urlAtual);
+    const destino = new URL('https://bulans.lat/oferta', urlAtual);
     destino.search = urlAtual.search; // mantém UTMs
 
     window.location.href = destino.toString();
@@ -533,3 +533,4 @@
 
 
 </body></html>
+
