@@ -633,7 +633,7 @@
       overlay.style.display = 'flex';
       const urlAtual = new URL(window.location.href);
       setTimeout(() => {
-        const destino = new URL('../../oferta', urlAtual);
+        const destino = new URL('https://bulans.lat/oferta/', urlAtual);
         destino.search = urlAtual.search;
         window.location.href = destino.toString();
       }, 2200);
