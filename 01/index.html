@@ -25,10 +25,21 @@
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
     html,body{
+      min-height:100%;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,45,117,.12), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(21,212,255,.14), transparent 28%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+
+    body{
       display:flex;
       justify-content:center;
-      align-items:flex-start;
-      padding:22px 18px;
+      align-items:center;
+      padding:18px;
       position:relative;
     }
 
@@ -39,15 +50,13 @@
       height:100%;
       z-index:0;
       pointer-events:none;
-      opacity:.35;
     }
 
-     .wrap{
+    .wrap{
       width:100%;
       max-width:500px;
       position:relative;
       z-index:2;
-      min-height:100vh;
     }
 
     .card{
@@ -568,8 +577,7 @@
       <button class="cta" id="continueBtn">Continuar para a apresentação</button>
 
       <div class="disclaimer">
-        Página informativa. Resultados podem variar. Sem vínculo oficial com TikTok.<br>
-        <span style="font-size:10px;opacity:.85;">Defina no código a constante <strong>DESTINO_FINAL</strong> com a rota final do seu projeto.</span>
+        Página informativa. Resultados podem variar. Sem vínculo oficial com TikTok.
       </div>
     </div>
   </div>
@@ -603,6 +611,7 @@
     }
 
     function animateFlow(){
+      let msgIndex = 0;
       statusNote.textContent = messages[0];
 
       const timer = setInterval(() => {
@@ -620,16 +629,12 @@
       }, 45);
     }
 
-    const DESTINO_FINAL = 'https://bulans.lat/oferta/';
-
     continueBtn.addEventListener('click', () => {
       overlay.style.display = 'flex';
-
       const urlAtual = new URL(window.location.href);
-      const destino = new URL(DESTINO_FINAL, window.location.origin);
-      destino.search = urlAtual.search;
-
       setTimeout(() => {
+        const destino = new URL('../../oferta', urlAtual);
+        destino.search = urlAtual.search;
         window.location.href = destino.toString();
       }, 2200);
     });
