@@ -1,1 +1,631 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Entenda como funciona</title> <style> :root{ --bg1:#fff7fb; --bg2:#f5fbff; --card:rgba(255,255,255,.82); --stroke:rgba(255,255,255,.7); --text:#0f172a; --muted:#64748b; --pink:#ff2d75; --pink2:#ff5c96; --cyan:#15d4ff; --green:#16a34a; --line:#e2e8f0; --soft:#f8fafc; --shadow:0 24px 70px rgba(15,23,42,.12); --radius:24px; } *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent} html,body{ min-height:100%; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background: radial-gradient(circle at 15% 20%, rgba(255,45,117,.12), transparent 30%), radial-gradient(circle at 85% 15%, rgba(21,212,255,.14), transparent 28%), linear-gradient(135deg,var(--bg1),var(--bg2)); overflow-x:hidden; } body{ display:flex; justify-content:center; align-items:center; padding:18px; position:relative; } #bgCanvas{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; } .wrap{ width:100%; max-width:500px; position:relative; z-index:2; } .card{ position:relative; overflow:hidden; border-radius:var(--radius); background:var(--card); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border:1px solid var(--stroke); box-shadow:var(--shadow); padding:18px; animation:enter .45s ease; } @keyframes enter{ from{opacity:0;transform:translateY(20px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} } .glow{ position:absolute; width:220px; height:220px; top:-120px; left:-70px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.92), rgba(255,255,255,0)); pointer-events:none; opacity:.7; } .badge{ display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:999px; background:#fff; border:1px solid #eef2f7; box-shadow:0 10px 26px rgba(15,23,42,.05); font-size:12px; font-weight:800; margin-bottom:14px; } .badge-dot{ width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 0 rgba(22,163,74,.45); animation:pulse 1.8s infinite; } @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(22,163,74,.45)} 70%{box-shadow:0 0 0 9px rgba(22,163,74,0)} 100%{box-shadow:0 0 0 0 rgba(22,163,74,0)} } h1{ font-size:28px; line-height:1.12; letter-spacing:-.03em; margin-bottom:10px; font-weight:900; } h1 span{ color:var(--pink); } .subtitle{ font-size:14px; color:var(--muted); line-height:1.55; margin-bottom:18px; } .hero{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:20px; background:linear-gradient(135deg,#111827,#1f2937); color:#fff; margin-bottom:16px; position:relative; overflow:hidden; } .hero::after{ content:""; position:absolute; inset:auto -20% -50% auto; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(255,45,117,.28), rgba(255,45,117,0)); } .hero-title{ font-size:13px; text-transform:uppercase; letter-spacing:.08em; opacity:.78; margin-bottom:5px; font-weight:700; } .hero-value{ font-size:28px; font-weight:900; line-height:1; margin-bottom:5px; } .hero-caption{ font-size:12px; opacity:.82; max-width:230px; line-height:1.4; } .hero-ring{ width:72px; height:72px; border-radius:50%; background:conic-gradient(var(--cyan) 0 20%, var(--pink) 20% 100%); display:grid; place-items:center; flex-shrink:0; animation:spinSlow 6s linear infinite; box-shadow:0 12px 28px rgba(0,0,0,.25); } .hero-ring-inner{ width:48px; height:48px; border-radius:50%; background:#0f172a; display:grid; place-items:center; font-size:12px; font-weight:900; color:#fff; } @keyframes spinSlow{to{transform:rotate(360deg)}} .steps{ background:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.9); border-radius:20px; padding:14px; margin-bottom:16px; } .steps-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; } .steps-title{ font-size:13px; font-weight:800; color:#334155; } .steps-mini{ font-size:12px; color:var(--muted); } .step{ display:grid; grid-template-columns:36px 1fr auto; gap:10px; align-items:center; padding:11px 0; border-bottom:1px solid var(--line); } .step:last-child{border-bottom:none;padding-bottom:0} .step-icon{ width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg,#fff,#f4f7fb); border:1px solid #e8edf5; display:flex; align-items:center; justify-content:center; font-size:15px; box-shadow:0 8px 16px rgba(15,23,42,.04); } .step-main{min-width:0} .step-label{ font-size:14px; font-weight:700; color:#0f172a; margin-bottom:3px; } .step-sub{ font-size:12px; color:var(--muted); line-height:1.35; } .step-state{ font-size:11px; font-weight:800; color:#94a3b8; transition:.2s ease; white-space:nowrap; } .step.done .step-state{color:var(--green)} .progress-box{ background:#fff; border:1px solid #eef2f7; border-radius:18px; padding:14px; box-shadow:0 12px 22px rgba(15,23,42,.04); margin-bottom:16px; } .progress-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; } .progress-title{ font-size:14px; font-weight:800; color:#0f172a; } .progress-value{ font-size:13px; font-weight:900; color:var(--pink); } .bar{ width:100%; height:12px; border-radius:999px; background:#edf2f7; overflow:hidden; position:relative; margin-bottom:10px; } .bar-fill{ width:0%; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--cyan),var(--pink),var(--pink2)); box-shadow:0 0 18px rgba(255,45,117,.28); transition:width .25s ease; position:relative; } .bar-fill::after{ content:""; position:absolute; top:0; right:0; width:90px; height:100%; background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0)); animation:shine 1.6s linear infinite; } @keyframes shine{ from{transform:translateX(30px)} to{transform:translateX(-120px)} } .status-note{ min-height:20px; font-size:13px; color:#475569; font-weight:600; } .benefits{ display:grid; gap:10px; margin-bottom:18px; } .benefit{ display:flex; align-items:flex-start; gap:10px; padding:12px; background:rgba(255,255,255,.72); border:1px solid rgba(255,255,255,.85); border-radius:16px; } .benefit-check{ width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#dcfce7,#bbf7d0); color:var(--green); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; flex-shrink:0; margin-top:1px; } .benefit strong{ display:block; font-size:13px; margin-bottom:2px; } .benefit span{ display:block; font-size:12px; color:var(--muted); line-height:1.4; } .cta{ width:100%; border:none; border-radius:999px; padding:16px 18px; background:linear-gradient(90deg,var(--pink),var(--pink2)); color:#fff; font-size:15px; font-weight:900; cursor:pointer; opacity:.55; pointer-events:none; box-shadow:0 14px 28px rgba(255,45,117,.28); transition:.18s ease; position:relative; overflow:hidden; } .cta.visible{ opacity:1; pointer-events:auto; animation:floatBtn 2.4s ease-in-out infinite; } .cta:hover{transform:translateY(-2px);animation:none} @keyframes floatBtn{ 0%{transform:translateY(0)} 50%{transform:translateY(-5px)} 100%{transform:translateY(0)} } .cta::after{ content:""; position:absolute; top:0; left:-40%; width:32%; height:100%; background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.28),rgba(255,255,255,0)); transform:skewX(-18deg); animation:ctaShine 2.2s linear infinite; } @keyframes ctaShine{ from{left:-40%} to{left:120%} } .disclaimer{ margin-top:12px; font-size:11px; line-height:1.45; color:#64748b; text-align:center; } .links{ margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px 12px; } .links a{ color:#475569; font-size:11px; text-decoration:none; } .footer-brand{ margin-top:10px; text-align:center; font-size:11px; color:#94a3b8; } .overlay{ position:fixed; inset:0; background:rgba(255,255,255,.94); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; flex-direction:column; z-index:9999; } .loader{ width:72px; height:72px; border-radius:50%; border:6px solid rgba(15,23,42,.08); border-top-color:var(--cyan); border-right-color:var(--pink); animation:spin 1s linear infinite; margin-bottom:16px; } @keyframes spin{to{transform:rotate(360deg)}} .overlay p{ font-size:14px; color:#334155; font-weight:700; } @media (max-width:520px){ .card{padding:16px} h1{font-size:24px} .hero-value{font-size:24px} } </style> </head> <body> <canvas id="bgCanvas"></canvas> <div class="wrap"> <div class="card"> <div class="glow"></div> <div class="badge"> <span class="badge-dot"></span> Etapa introdutória </div> <h1>Veja os <span>detalhes</span> antes de continuar</h1> <p class="subtitle"> Um resumo rápido foi preparado para facilitar sua análise antes da próxima etapa. </p> <div class="hero"> <div> <div class="hero-title">Resumo</div> <div class="hero-value" id="heroPercent">0%</div> <div class="hero-caption">Carregando apresentação inicial.</div> </div> <div class="hero-ring"> <div class="hero-ring-inner">OK</div> </div> </div> <div class="progress-box"> <div class="progress-top"> <div class="progress-title">Preparando conteúdo</div> <div class="progress-value" id="progressValue">0%</div> </div> <div class="bar"> <div class="bar-fill" id="barFill"></div> </div> <div class="status-note" id="statusNote">Iniciando visão geral…</div> </div> <div class="benefits"> <div class="benefit"> <div class="benefit-check">✓</div> <div> <strong>Resumo inicial</strong> <span>Informações organizadas para leitura rápida.</span> </div> </div> <div class="benefit"> <div class="benefit-check">✓</div> <div> <strong>Próxima etapa</strong> <span>Continue para visualizar a apresentação completa.</span> </div> </div> </div> <button class="cta" id="continueBtn">Continuar para a apresentação</button> <div class="disclaimer"> Página informativa. Resultados podem variar. </div> </div> </div> <div class="overlay" id="overlay"> <div class="loader"></div> <p>Carregando próxima etapa…</p> </div> <script> const progressValue = document.getElementById('progressValue'); const heroPercent = document.getElementById('heroPercent'); const statusNote = document.getElementById('statusNote'); const barFill = document.getElementById('barFill'); const continueBtn = document.getElementById('continueBtn'); const overlay = document.getElementById('overlay'); const messages = [ 'Iniciando visão geral…', 'Organizando informações…', 'Preparando próxima etapa…', 'Tudo pronto para continuar.' ]; let progress = 0; function setProgress(value){ progressValue.textContent = value + '%'; heroPercent.textContent = value + '%'; barFill.style.width = value + '%'; } function animateFlow(){ let msgIndex = 0; statusNote.textContent = messages[0]; const timer = setInterval(() => { progress += 2; if (progress > 100) progress = 100; setProgress(progress); if (progress === 30) statusNote.textContent = messages[1]; if (progress === 70) statusNote.textContent = messages[2]; if (progress === 100) { statusNote.textContent = messages[3]; continueBtn.classList.add('visible'); clearInterval(timer); } }, 45); } continueBtn.addEventListener('click', () => { overlay.style.display = 'flex'; const urlAtual = new URL(window.location.href); setTimeout(() => { const destino = new URL('../../oferta', urlAtual); destino.search = urlAtual.search; window.location.href = destino.toString(); }, 2200); }); animateFlow(); const canvas = document.getElementById('bgCanvas'); const ctx = canvas.getContext('2d'); let particles = []; let width = 0; let height = 0; function resizeCanvas(){ width = window.innerWidth; height = window.innerHeight; const ratio = window.devicePixelRatio || 1; canvas.width = width * ratio; canvas.height = height * ratio; canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; ctx.setTransform(ratio,0,0,ratio,0,0); } function createParticles(count){ const palette = [[255,45,117],[21,212,255],[255,255,255]]; particles = []; for(let i=0;i<count;i++){ const color = palette[Math.floor(Math.random() * palette.length)]; particles.push({ x: Math.random() * width, y: Math.random() * height, r: 1.8 + Math.random() * 3.2, sx: (Math.random() - .5) * .3, sy: .2 + Math.random() * .5, a: .18 + Math.random() * .35, color }); } } function drawParticles(){ ctx.clearRect(0,0,width,height); for(const p of particles){ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle = rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.a}); ctx.fill(); p.x += p.sx; p.y += p.sy; if(p.y - p.r > height){ p.y = -10; p.x = Math.random()*width; } if(p.x < -20) p.x = width + 20; if(p.x > width + 20) p.x = -20; } requestAnimationFrame(drawParticles); } window.addEventListener('resize', () => { resizeCanvas(); createParticles(34); }); resizeCanvas(); createParticles(34); drawParticles(); </script> </body> </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entenda como funciona</title>
+  <style>
+    :root{
+      --bg1:#fff7fb;
+      --bg2:#f5fbff;
+      --card:rgba(255,255,255,.82);
+      --stroke:rgba(255,255,255,.7);
+      --text:#0f172a;
+      --muted:#64748b;
+      --pink:#ff2d75;
+      --pink2:#ff5c96;
+      --cyan:#15d4ff;
+      --green:#16a34a;
+      --line:#e2e8f0;
+      --shadow:0 24px 70px rgba(15,23,42,.12);
+      --radius:24px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html,body{
+      min-height:100%;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,45,117,.12), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(21,212,255,.14), transparent 28%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+
+    body{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:18px;
+      position:relative;
+    }
+
+    #bgCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:500px;
+      position:relative;
+      z-index:2;
+    }
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius);
+      background:var(--card);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      border:1px solid var(--stroke);
+      box-shadow:var(--shadow);
+      padding:18px;
+      animation:enter .45s ease;
+    }
+
+    @keyframes enter{
+      from{opacity:0;transform:translateY(20px) scale(.98)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .glow{
+      position:absolute;
+      width:220px;
+      height:220px;
+      top:-120px;
+      left:-70px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.92), rgba(255,255,255,0));
+      pointer-events:none;
+      opacity:.7;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid #eef2f7;
+      box-shadow:0 10px 26px rgba(15,23,42,.05);
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .badge-dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--green);
+      box-shadow:0 0 0 0 rgba(22,163,74,.45);
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(22,163,74,.45)}
+      70%{box-shadow:0 0 0 9px rgba(22,163,74,0)}
+      100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}
+    }
+
+    h1{
+      font-size:28px;
+      line-height:1.12;
+      letter-spacing:-.03em;
+      margin-bottom:10px;
+      font-weight:900;
+    }
+
+    h1 span{
+      color:var(--pink);
+    }
+
+    .subtitle{
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:18px;
+    }
+
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      border-radius:20px;
+      background:linear-gradient(135deg,#111827,#1f2937);
+      color:#fff;
+      margin-bottom:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -20% -50% auto;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,45,117,.28), rgba(255,45,117,0));
+    }
+
+    .hero-title{
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      opacity:.78;
+      margin-bottom:5px;
+      font-weight:700;
+    }
+
+    .hero-value{
+      font-size:28px;
+      font-weight:900;
+      line-height:1;
+      margin-bottom:5px;
+    }
+
+    .hero-caption{
+      font-size:12px;
+      opacity:.82;
+      max-width:230px;
+      line-height:1.4;
+    }
+
+    .hero-ring{
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      background:conic-gradient(var(--cyan) 0 20%, var(--pink) 20% 100%);
+      display:grid;
+      place-items:center;
+      flex-shrink:0;
+      animation:spinSlow 6s linear infinite;
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+    }
+
+    .hero-ring-inner{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:#0f172a;
+      display:grid;
+      place-items:center;
+      font-size:12px;
+      font-weight:900;
+      color:#fff;
+    }
+
+    @keyframes spinSlow{
+      to{transform:rotate(360deg)}
+    }
+
+    .progress-box{
+      background:#fff;
+      border:1px solid #eef2f7;
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 12px 22px rgba(15,23,42,.04);
+      margin-bottom:16px;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .progress-title{
+      font-size:14px;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    .progress-value{
+      font-size:13px;
+      font-weight:900;
+      color:var(--pink);
+    }
+
+    .bar{
+      width:100%;
+      height:12px;
+      border-radius:999px;
+      background:#edf2f7;
+      overflow:hidden;
+      position:relative;
+      margin-bottom:10px;
+    }
+
+    .bar-fill{
+      width:0%;
+      height:100%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--cyan),var(--pink),var(--pink2));
+      box-shadow:0 0 18px rgba(255,45,117,.28);
+      transition:width .25s ease;
+      position:relative;
+    }
+
+    .bar-fill::after{
+      content:"";
+      position:absolute;
+      top:0;
+      right:0;
+      width:90px;
+      height:100%;
+      background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));
+      animation:shine 1.6s linear infinite;
+    }
+
+    @keyframes shine{
+      from{transform:translateX(30px)}
+      to{transform:translateX(-120px)}
+    }
+
+    .status-note{
+      min-height:20px;
+      font-size:13px;
+      color:#475569;
+      font-weight:600;
+    }
+
+    .benefits{
+      display:grid;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .benefit{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.85);
+      border-radius:16px;
+    }
+
+    .benefit-check{
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+      color:var(--green);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:900;
+      flex-shrink:0;
+      margin-top:1px;
+    }
+
+    .benefit strong{
+      display:block;
+      font-size:13px;
+      margin-bottom:2px;
+    }
+
+    .benefit span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .cta{
+      width:100%;
+      border:none;
+      border-radius:999px;
+      padding:16px 18px;
+      background:linear-gradient(90deg,var(--pink),var(--pink2));
+      color:#fff;
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+      opacity:.55;
+      pointer-events:none;
+      box-shadow:0 14px 28px rgba(255,45,117,.28);
+      transition:.18s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cta.visible{
+      opacity:1;
+      pointer-events:auto;
+      animation:floatBtn 2.4s ease-in-out infinite;
+    }
+
+    .cta:hover{
+      transform:translateY(-2px);
+      animation:none;
+    }
+
+    @keyframes floatBtn{
+      0%{transform:translateY(0)}
+      50%{transform:translateY(-5px)}
+      100%{transform:translateY(0)}
+    }
+
+    .cta::after{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-40%;
+      width:32%;
+      height:100%;
+      background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.28),rgba(255,255,255,0));
+      transform:skewX(-18deg);
+      animation:ctaShine 2.2s linear infinite;
+    }
+
+    @keyframes ctaShine{
+      from{left:-40%}
+      to{left:120%}
+    }
+
+    .disclaimer{
+      margin-top:12px;
+      font-size:11px;
+      line-height:1.45;
+      color:#64748b;
+      text-align:center;
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(8px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:9999;
+    }
+
+    .loader{
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      border:6px solid rgba(15,23,42,.08);
+      border-top-color:var(--cyan);
+      border-right-color:var(--pink);
+      animation:spin 1s linear infinite;
+      margin-bottom:16px;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+
+    .overlay p{
+      font-size:14px;
+      color:#334155;
+      font-weight:700;
+    }
+
+    @media (max-width:520px){
+      .card{padding:16px}
+      h1{font-size:24px}
+      .hero-value{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="glow"></div>
+
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Etapa introdutória
+      </div>
+
+      <h1>Veja os <span>detalhes</span> antes de continuar</h1>
+      <p class="subtitle">
+        Um resumo rápido foi preparado para facilitar sua análise antes da próxima etapa.
+      </p>
+
+      <div class="hero">
+        <div>
+          <div class="hero-title">Resumo</div>
+          <div class="hero-value" id="heroPercent">0%</div>
+          <div class="hero-caption">Carregando apresentação inicial.</div>
+        </div>
+        <div class="hero-ring">
+          <div class="hero-ring-inner">OK</div>
+        </div>
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-top">
+          <div class="progress-title">Preparando conteúdo</div>
+          <div class="progress-value" id="progressValue">0%</div>
+        </div>
+        <div class="bar">
+          <div class="bar-fill" id="barFill"></div>
+        </div>
+        <div class="status-note" id="statusNote">Iniciando visão geral…</div>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-check">✓</div>
+          <div>
+            <strong>Resumo inicial</strong>
+            <span>Informações organizadas para leitura rápida.</span>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-check">✓</div>
+          <div>
+            <strong>Próxima etapa</strong>
+            <span>Continue para visualizar a apresentação completa.</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="cta" id="continueBtn">Continuar para a apresentação</button>
+
+      <div class="disclaimer">
+        Página informativa. Resultados podem variar.
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="loader"></div>
+    <p>Carregando próxima etapa…</p>
+  </div>
+
+  <script>
+    const progressValue = document.getElementById('progressValue');
+    const heroPercent = document.getElementById('heroPercent');
+    const statusNote = document.getElementById('statusNote');
+    const barFill = document.getElementById('barFill');
+    const continueBtn = document.getElementById('continueBtn');
+    const overlay = document.getElementById('overlay');
+
+    const messages = [
+      'Iniciando visão geral…',
+      'Organizando informações…',
+      'Preparando próxima etapa…',
+      'Tudo pronto para continuar.'
+    ];
+
+    let progress = 0;
+
+    function setProgress(value){
+      progressValue.textContent = value + '%';
+      heroPercent.textContent = value + '%';
+      barFill.style.width = value + '%';
+    }
+
+    function animateFlow(){
+      statusNote.textContent = messages[0];
+
+      const timer = setInterval(() => {
+        progress += 2;
+        if (progress > 100) progress = 100;
+        setProgress(progress);
+
+        if (progress === 30) statusNote.textContent = messages[1];
+        if (progress === 70) statusNote.textContent = messages[2];
+        if (progress === 100) {
+          statusNote.textContent = messages[3];
+          continueBtn.classList.add('visible');
+          clearInterval(timer);
+        }
+      }, 45);
+    }
+
+    continueBtn.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+      const urlAtual = new URL(window.location.href);
+
+      setTimeout(() => {
+        const destino = new URL('https://bulans.lat/oferta/');
+        destino.search = urlAtual.search;
+        window.location.href = destino.toString();
+      }, 2200);
+    });
+
+    animateFlow();
+
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let width = 0;
+    let height = 0;
+
+    function resizeCanvas(){
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function createParticles(count){
+      const palette = [
+        [255,45,117],
+        [21,212,255],
+        [255,255,255]
+      ];
+
+      particles = [];
+      for(let i = 0; i < count; i++){
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 1.8 + Math.random() * 3.2,
+          sx: (Math.random() - 0.5) * 0.3,
+          sy: 0.2 + Math.random() * 0.5,
+          a: 0.18 + Math.random() * 0.35,
+          color
+        });
+      }
+    }
+
+    function drawParticles(){
+      ctx.clearRect(0, 0, width, height);
+
+      for(const p of particles){
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.a})`;
+        ctx.fill();
+
+        p.x += p.sx;
+        p.y += p.sy;
+
+        if(p.y - p.r > height){
+          p.y = -10;
+          p.x = Math.random() * width;
+        }
+
+        if(p.x < -20) p.x = width + 20;
+        if(p.x > width + 20) p.x = -20;
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles(34);
+    });
+
+    resizeCanvas();
+    createParticles(34);
+    drawParticles();
+  </script>
+</body>
+</html>
